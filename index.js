@@ -13,7 +13,6 @@ const corsOptions = {
   origin: "https://localhost:3000", // or use http if not using https
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true // if you need cookies or auth headers
 };
 
 app.use(cors(corsOptions));
