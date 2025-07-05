@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
@@ -10,39 +9,30 @@ const port = process.env.PORT || 4000;
 app.use(express.json({ limit: '50mb' })); // Increase the limit as needed
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Allow CORS requests from specific origins
-const allowedOrigins = ["http://localhost:3000", "https://next-js-test-tau-six.vercel.app"];
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with']
-}));
+const corsOptions = {
+  origin: "https://localhost:3000", // or use http if not using https
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true // if you need cookies or auth headers
+};
+
+app.use(cors(corsOptions));
 
 // Enable preflight requests for all routes
-app.options('*', cors());
+app.options('*', cors(corsOptions));
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("MongoDB connected..."))
-  .catch((err) => console.log(err));
+/// Routes
+// const saveEmailRoute = require("./routes/stats.route");
 
-// Import routes
-const signupRoute = require("./routes/signup.route");
-app.use("/api/signup", signupRoute);
+// app.use("/api/saveemail", saveEmailRoute);
 
 const signinRoute = require("./routes/login.route");
 app.use("/api/login", signinRoute);
 
-const blogpostRoute = require("./routes/blogpost.route");
-app.use("/api/blogpost", blogpostRoute);
+const userInfo = require("./routes/stats.route");
+app.use("/api/stats", userInfo);
+
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
