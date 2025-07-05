@@ -32,7 +32,9 @@ app.use("/api/login", signinRoute);
 const userInfo = require("./routes/stats.route");
 app.use("/api/stats", userInfo);
 
-
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
