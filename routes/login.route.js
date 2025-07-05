@@ -9,6 +9,20 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI; // Must match the one registered in Azure AD
 
+router.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://localhost:3000");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
+router.options('*', (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://localhost:3000");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.status(204).end();
+});
+
 // Route to handle SSO login and token refresh
 router.post('/auth/microsoft', async (req, res) => {
   const { auth_code } = req.body;
